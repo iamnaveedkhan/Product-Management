@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>DASHBOARD</title>
+</head>
+<body class="flex items-center justify-center bg-gray-300">
+    
+      <div  class="bg-white rounded-lg shadow-xl p-4 mt-20">
+        <h2 class="text-3xl font-bold mb-6 text-center">All Products</h2>
+        <table class="w-full">
+          
+            <tr>
+              <th class="p-2 px-4 border-b text-center">ID</th>
+              <th class="p-2 px-4 border-b text-center">Name</th>
+              <th class="p-2 px-4 border-b text-center">Age</th>
+              <th class="p-2 px-4 border-b text-center">Symptoms</th>
+              <th class="p-2 px-4 border-b text-center">Descriptons</th>
+              <th class="p-2 px-4 border-b text-center">Expire On</th>
+              <th class="p-2 px-4 border-b text-center">Edit</th>
+              <th class="p-2 px-4 border-b text-center">Delete</th>
+            </tr>
+         
+          
+            {% for p in count %}
+            <tr>
+              <td class="p-2 px-4 border-b text-center">{{ p.id }}</td>
+              <td class="p-2 px-4 border-b text-center">{{ p.name }}</td>
+              <td class="p-2 px-4 border-b text-center">{{ p.quantity }}</td>
+              <td class="p-2 px-4 border-b text-center">{{ p.type }}</td>
+              <td class="p-2 px-4 border-b text-center">{{ p.batch }}</td>
+              <td class="p-2 px-4 border-b text-center">{{ p.expire }}</td>
+              <td class="p-2 px-4 border-b text-center">
+                <button
+                  class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"
+                  type="button"
+                  >
+                  
+                  <a href="http://127.0.0.1:8000/edit?id={{ p.id }}">Edit</a>
+                </button>
+                </td>
+                <td>
+                <button
+                  class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded mr-2"
+                  onclick="handleClick('{{ p.id }}')"
+                  type="button"
+                >
+                Delete
+                </button>
+              </td>
+            </tr>
+            {% endfor %}
+            
+         
+        </table>
+      </div>
+</body>
+    <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+
+
+    function getCookie(name) {
+      const cookieValue = document.cookie.match(
+        "(^|;)\\s*" + name + "\\s*=\\s*([^;]+)"
+      );
+      return cookieValue ? cookieValue.pop() : "";
+    }
+    async function handleClick(id) {
+      
+      await fetch("http://127.0.0.1:8000/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({ id }),
+      }).then((res) => location.reload());
+    }
+    </script>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Edit</title>
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-md mx-auto py-8 px-4">
+      <h2 class="text-3xl font-bold mb-6 text-center">Edit Patient</h2>
+      <form
+        id="editForm"
+        class="bg-white border border-black rounded-lg px-8 pt-6 pb-8 mb-4"
+        method="post"
+        action=""
+      >
+        {% csrf_token %}
+        <div class="mb-4">
+          <input type="hidden" name="id" value="{{ data.id }}" />
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="name"
+            >Name</label
+          >
+          <input
+            class="appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            id="name"
+            name="name"
+            value="{{ data.name }}"
+            type="text"
+            placeholder="Enter Name"
+          />
+        </div>
+        <div class="mb-6">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="quantity"
+            >Quantity</label
+          >
+          <input
+            class="appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            id="quantity"
+            name="quantity"
+            type="number"
+            placeholder="Enter Quantity"
+            value="{{data.quantity}}"
+          />
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="type"
+            >Type</label
+          >
+          <select
+            name="type"
+            id="type"
+            class="w-full border-gray-300 border placeholder:text-xs px-2 h-10 rounded-md"
+          >
+            <option value="" {% if data.type == '' %} selected {% endif %}></option>
+            <option value="Tablets" {% if data.type == 'Tablets' %} selected {% endif %}>
+              Tablets
+            </option>
+            <option value="Capsules" {% if data.type == 'Capsules' %} selected {% endif %}>
+              Capsules
+            </option>
+
+            <option value="Syrups" {% if data.type == 'Syrups' %} selected {% endif %}>
+              Syrups
+            </option>`
+          </select>
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="batch"
+            >Batch</label
+          >
+          <input
+            class="appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            id="batch"
+            name="batch"
+            type="text"
+            placeholder="Enter Batch Details"
+            value="{{data.batch}}"
+          />
+        </div>
+        <div class="mb-6">
+          <label class="block text-gray-700 text-sm font-bold mb-2" for="expire"
+            >Expire On</label
+          >
+          <input
+            class="appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            id="expire"
+            name="expire"
+            type="text"
+            placeholder="Enter expire Details"
+            value="{{ data.expire|date:'Y-m-d'}}"
+          />
+        </div>
+
+        <div class="flex gap-2 items-center justify-center">
+          <button
+            class="bg-blue-500 hover:bg-blue-700 text-white font-bold rounded w-full"
+            type="submit"
+          >
+            Submit
+          </button>
+          <a href="http://127.0.0.1:8000/add" class="w-full">
+            <button
+              class="bg-red-500 hover:bg-red-700 text-white font-bold rounded w-full"
+              type="button"
+              onclick="handleClick('{{ data.id }}')"
+            >
+              Delete
+            </button>
+          </a>
+        </div>
+      </form>
+    </div>
+  </body>
+  <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+
+    function getCookie(name) {
+      const cookieValue = document.cookie.match(
+        "(^|;)\\s*" + name + "\\s*=\\s*([^;]+)"
+      );
+      return cookieValue ? cookieValue.pop() : "";
+    }
+    async function handleClick(id) {
+      await fetch("http://127.0.0.1:8000/delete", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({ id }),
+      })
+    }
+    
+  </script>
+</html>
