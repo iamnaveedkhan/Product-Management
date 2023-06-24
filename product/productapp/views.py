@@ -3,11 +3,9 @@ from productapp.models import data
 import json
 # Create your views here.
 def add(request):
-
-    # return render(request,'one.html')
     if request.method=='GET':
 
-        return render(request,'one.html')
+        return render(request,'add.html')
     else:
         n=request.POST['name']
         q=request.POST['quantity']
@@ -19,7 +17,7 @@ def add(request):
         m.save()
         context = {}
         context['count']=data.objects.all()
-        return render(request,'one.html',context)
+        return redirect('/dashboard')
 
 
 def dashboard(request):
@@ -27,35 +25,28 @@ def dashboard(request):
     context['count']=data.objects.all()
     return render(request,'dashboard.html',context)
 
-def delete(request):
-    if request.method == 'POST':
-        string_data =request.body.decode("utf-8")
-        json_data = json.loads(string_data)
-        k=data.objects.get(id=json_data.get('id'))
+def delete(request,rid):
+    k=data.objects.get(id=rid)
 
-        k.delete()
-        return redirect('dash')
+    k.delete()
+    return redirect('/add')
         
     
-def edit(request):
+def edit(request,rid):
     if request.method == 'GET':
-        kid=request.GET.get('id')
-        k=data.objects.get(id=kid)
+        k=data.objects.get(id=rid)
         
         context= {}
         context['data']= k
-        
-        return render(request, 'edit.html', context)
+        return render(request,'edit.html', context)
         
     else:
-      
-        eid=request.POST['id']
         n=request.POST['name']
         q=request.POST['quantity']
         t=request.POST['type']
         b=request.POST['batch']
         e=request.POST['expire']
-        j=data.objects.get(id=eid)
+        j=data.objects.get(id=rid)
         j.name = n
         j.quantity = q
         j.type = t
@@ -64,4 +55,4 @@ def edit(request):
         j.save()
         context={}
         context['data']=j
-        return redirect('dash')
+        return redirect('/dashboard')

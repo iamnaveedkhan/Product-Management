@@ -106,36 +106,12 @@
             <button
               class="bg-red-500 hover:bg-red-700 text-white font-bold rounded w-full"
               type="button"
-              onclick="handleClick('{{ data.id }}')"
             >
-              Delete
+            <a href="http://127.0.0.1:8000/delete/{{ data.id }}">Delete</a>
             </button>
           </a>
         </div>
       </form>
     </div>
   </body>
-  <script>
-    if (window.history.replaceState) {
-      window.history.replaceState(null, null, window.location.href);
-    }
-
-    function getCookie(name) {
-      const cookieValue = document.cookie.match(
-        "(^|;)\\s*" + name + "\\s*=\\s*([^;]+)"
-      );
-      return cookieValue ? cookieValue.pop() : "";
-    }
-    async function handleClick(id) {
-      await fetch("http://127.0.0.1:8000/delete", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken"),
-        },
-        body: JSON.stringify({ id }),
-      })
-    }
-    
-  </script>
 </html>
